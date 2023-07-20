@@ -1,0 +1,30 @@
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 100px;
+  }
+
+.botao{
+  padding: 10px;
+}  
+
+#botao{
+  color: black;
+  background-color: white;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 17px;
+  border: -15px;
+  border-color: black;
+}
+
+  .box{
+    box-shadow: 10px 10px 5px 0px #202122;
+    padding: 50px;
+    border-radius: 50px;
+    background-color: #0948a7;
+    min-width: 330px; 
+  }
+  

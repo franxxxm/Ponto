@@ -1,0 +1,20 @@
+
+
+
+#confirm{
+    border: -15px;
+    border-color: black;
+    color: black;
+    background-color: white;
+    border-radius: 25px;
+    font-size: 17px;
+  }
+
+ .box{
+    margin-top: 50px;
+    padding: 50px;
+    border-radius: 50px;
+    background-color: #0948a7;
+    min-width: 300px;
+
+ }

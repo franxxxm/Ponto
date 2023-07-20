@@ -1,0 +1,33 @@
+
+
+.box{
+    text-align: center;
+    margin-top: 30px;
+    padding: 30px;
+ }
+
+@media (min-width: 900px) {
+    .hora{
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+}
+
+#botao{
+   width: 100px;
+   margin-top: -5px;
+}
+
+h4{
+    font-weight: bold;
+}
+
+.hora{
+    border:  2px solid black;
+    margin-top: 50px;
+    background-color: white;
+    color: black;
+    height: 50px;
+    font-family: monospace;
+    font-size: 30px;
+}

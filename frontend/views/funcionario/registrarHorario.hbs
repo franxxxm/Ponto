@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="/css/usuario/registrarHorario.css">
+
+<form method="POST">
+<div class="box">
+    <div class="row">
+        <div class="col">
+            <div id="hora" class="hora">
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            {{#if entrada}}
+                {{#if saida}}
+                    {{else}}
+                <p><h4>Saída</h4></p>
+                <button type="submit" id="botao" name="botao" value="saida" class="btn btn-danger"><i class="bi bi-check-circle-fill"></i></button>
+                {{/if}}
+                {{else}}
+            <p><h4>Entrada</h4></p>
+            <button type="submit" id="botao" name="botao" value="entrada" class="btn btn-success"><i class="bi bi-check-circle-fill"></i></button>
+            {{/if}}
+        </div>
+    </div>
+</div>
+</form>
+<script src="/js/usuario/registrarHorario.js"></script>
