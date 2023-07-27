@@ -1,0 +1,10 @@
+.data{
+    display: flex;
+    justify-content: center;
+}
+
+select{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+

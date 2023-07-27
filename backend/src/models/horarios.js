@@ -26,9 +26,23 @@ const bd = require("./bd")
         return result
     }
 
+    const getHorariosAno = async ({id_usuario, ano})=>{
+        const sql = `SELECT * FROM horarios WHERE id_usuarios = '${id_usuario}' AND ano = '${ano}'`
+        const [result] = await bd.query(sql)
+
+        return result
+    }
+
     const getHorariosIdUser = async (id_usuario)=>{
         const sql = `SELECT * FROM horarios WHERE id_usuarios = '${id_usuario}'`
         const [result] = await bd.query(sql);
+
+        return result
+    }
+
+    const getHorariosHistorico = async({id_usuario, ano, mes})=>{
+        const sql = `SELECT * FROM horarios WHERE id_usuarios = '${id_usuario}' AND ano = '${ano}' AND mes = '${mes}'`
+        const [result] = await bd.query(sql)
 
         return result
     }
@@ -47,5 +61,7 @@ module.exports = {
     createHorario,
     getHorariosIdUser,
     verificarRegistro,
-    upHorarioSaida
+    upHorarioSaida,
+    getHorariosHistorico,
+    getHorariosAno
 }

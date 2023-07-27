@@ -5,6 +5,9 @@ const routes = require("express").Router();
 const jwt = require('jsonwebtoken');
 const online = require("../middlewares/rotaOnline")
 const offline = require("../middlewares/rotaOffline")
+const estruturaAno = require('../config/estruturaAno')
+const estruturaDia = require("../config/estruturaDia")
+const estruturaMes = require("../config/estruturaMes")
 
 routes.use((req, res, next) => {
 
@@ -33,30 +36,109 @@ routes.use((req, res, next) => {
         }
     }
     //criar sessão se o usuario ja se registrou hoje 
-    const data = new Date();
-    const dia = data.getDate();
-    const mes = data.getMonth() + 1;
-    const ano = data.getFullYear();
-    axios.post(`http://192.168.88.15:2000/api/verificar`, {
-        id_usuario: req.session.user,
-        mes: mes,
-        dia: dia,
-        ano: ano
-    }).then(dados => {
-        const {
-            data
-        } = dados
-        console.log(data)
-        req.session.entrada = data.entrada
-        req.session.saida = data.saida
-    })
+    if (req.session.entrada) {
+
+        const data = new Date();
+        const dia = data.getDate();
+        const mes = data.getMonth() + 1;
+        const ano = data.getFullYear();
+        axios.post(`http://192.168.88.15:2000/api/verificar`, {
+            id_usuario: req.session.user,
+            mes: mes,
+            dia: dia,
+            ano: ano
+        }).then(dados => {
+            const {
+                data
+            } = dados
+            req.session.entrada = data.entrada
+            req.session.saida = data.saida
+        })
+    }
 
     next();
 })
 
 
-routes.get("/Registrar-Horario", online, (req, res) => {
-    console.log(req.session.entrada, req.session.saida)
+
+routes.get("/menu", online, (req, res) => {
+    axios.get(`http://192.168.88.15:2000/api/funcionario/${req.session.user}`, {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(dados => {
+        const {
+            data
+        } = dados
+        const date = new Date();
+        const dia = date.getDate();
+        const mes = date.getMonth() + 1;
+        const ano = date.getFullYear();
+        axios.post(`http://192.168.88.15:2000/api/verificar`, {
+            id_usuario: req.session.user,
+            mes: mes,
+            dia: dia,
+            ano: ano
+        }).then(horarios => {
+            const data1 = horarios.data
+            res.render('./funcionario/menu.hbs', {
+                nome: data[0].nome_completo,
+                matricula: data[0].matricula,
+                user: req.session.user,
+                adm: req.session.adm,
+                menu: true,
+                entrada:data1.entrada,
+                saida:data1.saida
+            })
+        })
+    })
+})
+
+routes.get("/historico", online, (req, res) => {
+    axios.get(`http://192.168.88.15:2000/api/horarios/${req.session.user}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(dados => {
+        const {
+            data
+        } = dados
+        if (data.length < 1) {
+            return res.render("./funcionario/historico.hbs", {
+                registro: false,
+                user: req.session.user || null,
+                adm: req.session.adm || null,
+                historico: true
+            })
+        }
+        const date = new Date()
+        const anoAtual = req.query.ano || date.getFullYear()
+        const mesAtual = req.query.mes || date.getMonth() + 1
+        const ano = estruturaAno(data, anoAtual)
+        const mes = estruturaMes(mesAtual)
+        axios.post(`http://192.168.88.15:2000/api/historico`, {
+            id_usuario: req.session.user,
+            mes: mesAtual,
+            ano: anoAtual,
+        }).then(dados => {
+            const {
+                data
+            } = dados
+            const estruturaMesVar = estruturaDia(data, anoAtual, mesAtual)
+            res.render("./funcionario/historico.hbs", {
+                ano: ano,
+                mes: mes,
+                dados: estruturaMesVar,
+                registro: data.length == 0 ? false : true,
+                user: req.session.user || null,
+                adm: req.session.adm || null,
+                historico: true
+            })
+        })
+    })
+})
+
+routes.get("/registrar-Horario", online, (req, res) => {
     const data = new Date();
     const dia = data.getDate();
     const mes = data.getMonth() + 1;
@@ -72,20 +154,20 @@ routes.get("/Registrar-Horario", online, (req, res) => {
         } = dados
 
         res.render("./funcionario/registrarHorario.hbs", {
-            hora: true,
             user: req.session.user || null,
             adm: req.session.adm || null,
             sucesso: req.flash('sucesso'),
             erro: req.flash('erro'),
             entrada: data.entrada,
-            saida: data.saida
+            saida: data.saida,
+            hora: true,
         })
     })
 
 })
 
 
-routes.post("/Registrar-Horario", (req, res) => {
+routes.post("/registrar-Horario", (req, res) => {
     const botao = req.body.botao
 
     if (req.session.entrada && botao == 'entrada') {

@@ -16,6 +16,18 @@ const upHorarioSaida = async (req, res)=>{
     return res.status(201).json({mensagem:true})
 }
 
+const getHorariosHistorico = async (req, res)=>{
+    const result = await horarios.getHorariosHistorico(req.body)
+
+    return res.status(201).json(result)
+}
+
+const getHorariosAno = async (req, res)=>{
+    const result = await horarios.getHorariosAno(req.body)
+
+    return res.status(201).json(result)
+}
+
 const getHorariosIdUser = async (req, res)=>{
     const result = await horarios.getHorariosIdUser(req.params.id)
 
@@ -40,5 +52,7 @@ module.exports = {
     createHorarios,
     getHorariosIdUser,
     verificarRegistro,
-    upHorarioSaida
+    upHorarioSaida,
+    getHorariosHistorico,
+    getHorariosAno
 }
