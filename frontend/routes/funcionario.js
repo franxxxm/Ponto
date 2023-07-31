@@ -56,12 +56,19 @@ routes.use((req, res, next) => {
         })
     }
 
+    const admNot = ['/Registrar-Horario']
+
+    if(req.session.adm > 0){
+        if(req.url == admNot[0]){
+            //return res.redirect("/PoloUAB/adm/menu")
+        }
+    }
     next();
 })
 
 
 
-routes.get("/menu", online, (req, res) => {
+routes.get("/Home", online, (req, res) => {
     axios.get(`http://192.168.88.15:2000/api/funcionario/${req.session.user}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -81,7 +88,7 @@ routes.get("/menu", online, (req, res) => {
             ano: ano
         }).then(horarios => {
             const data1 = horarios.data
-            res.render('./funcionario/menu.hbs', {
+            res.render('./funcionario/home.hbs', {
                 nome: data[0].nome_completo,
                 matricula: data[0].matricula,
                 user: req.session.user,
