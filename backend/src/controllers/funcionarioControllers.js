@@ -3,12 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 
 const createFuncionario = async (req, res) => {
-    const saltRounds = 10;
-    const senha = req.body.senha
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(senha, salt)
-    req.body.senha = hash
-
     const usuario = await modelsFuncionario.createFuncionario(req.body);
 
     if (!usuario) return res.status(200).json({
@@ -41,12 +35,6 @@ const deleteFuncionario = async (req, res) => {
 }
 
 const setFuncionario = async (req, res) => {
-    const saltRounds = 10;
-    const senha = req.body.senha
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(senha, salt)
-    req.body.senha = hash
-
     const usuario = await modelsFuncionario.setFuncionario(req.params.id, req.body);
 
     return res.status(200).json({
@@ -54,43 +42,16 @@ const setFuncionario = async (req, res) => {
     });
 }
 
-const login = async (req, res) => {
-    const dados = await modelsFuncionario.login(req.body);
+const setSenha = async (req, res)=>{
+    const saltRounds = 10;
+    const senha = req.body.senha
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(senha, salt)
+    req.body.senha = hash
 
-    if (dados == false) return res.status(200).json({
-        mensagem: false,
-        erro: 'Matricula não estra registada'
-    });
+    const usuario = await modelsFuncionario.setSenha(req.params.id, req.body)
 
-    bcrypt.compare(dados.senhaUser, dados.senha, function (err, result) {
-        if(err){
-            return res.status(200).json({
-                mensagem:false,
-                erro:'Senha incorreta'
-            })
-        }
-        if (result) {
-            const info = {
-                id: dados.matricula,
-                adm:dados.adm
-            }
-            const segredo = '349ur309r039ir93i'
-            const token = jwt.sign(info, segredo, {
-                expiresIn: '12h'
-            });
-            return res.status(200).json({
-                token: token,
-                nome:dados.nome,
-                mensagem: true
-            })
-
-        }
-        return res.status(200).json({
-            mensagem: false,
-            erro: 'Senha incorreta'
-        });
-    })
-
+    return res.status(201).json({mensagem:true})
 }
 
 module.exports = {
@@ -99,5 +60,5 @@ module.exports = {
     getIdFuncionario,
     deleteFuncionario,
     setFuncionario,
-    login
+    setSenha,
 }

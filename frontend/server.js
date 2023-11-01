@@ -47,9 +47,10 @@ app.use(express.static(path.join(__dirname,"public")));
 
 //rotas 
 const funcionario = require("./routes/funcionario.js");
+const admin = require("./routes/administrador")
 
 app.use("/PoloUAB", funcionario);
-
+app.use("/PoloUAB/adm", admin);
 
 app.listen(3030, ()=>{
     console.log('http://localhost:3030/teste')

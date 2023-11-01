@@ -13,6 +13,19 @@
     }
 }
 
+.modal{
+  color: white;
+}
+.modal-footer{
+  justify-content: center;
+}
+.modal-dialog{
+  background-color: white;
+}
+.modal-content{
+  background-color: #606364;
+}
+
 #botao{
    width: 100px;
    margin-top: -5px;
@@ -31,6 +44,8 @@ h4{
     font-family: monospace;
     font-size: 30px;
 }
+
+
 
 .lds-spinner {
     color: official;

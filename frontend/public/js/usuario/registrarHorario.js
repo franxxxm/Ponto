@@ -2,6 +2,7 @@
 
     const horaRegistrar = document.getElementById("hora")
     const load = document.getElementById('carregar')
+    const form = document.getElementById('form')
 
     load.innerHTML += `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
 
@@ -21,3 +22,10 @@
       load.innerHTML = ''
   }
   setInterval(exibirHoraAtual, 1000)
+
+  const enviar = ()=>{
+    const e = window.confirm('Deseja confirmar?')
+    console.log(e)
+  } 
+
+  

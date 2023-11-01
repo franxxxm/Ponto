@@ -1,0 +1,72 @@
+<link rel="stylesheet" href="/css/admin/horarios.css">
+
+<div class="box">
+    {{#each dadosAusencia}}
+    <div class="alert alert-primary" id="alerta">
+        <i class="bi bi-info-circle-fill"></i>
+        <strong>{{nome_completo}} | {{matricula}} | Entrada:{{data_entrada}} | Volta:{{data_saida}}</strong>
+    </div>
+    {{/each}}
+</div>
+
+
+<div class="box">
+    <form action="/PoloUAB/adm/editar-horario" method="post" class="row ">
+        <h4>Editar Horario</h4>
+        <div class="col-auto">
+            <strong>Data:</strong><input type="date" name="data" id="calendario" class="form-control" required>
+        </div>
+        <div class="col-auto">
+            <strong>Horario:</strong><input type="time" name="hora" id="calendario" class="form-control" required>
+        </div>
+        <div id="boxes" class="col-auto">
+            <strong>Entrada:</strong><input type="checkbox" name="opcao" value="entrada" class="form-check-input"
+                id="opcao">
+            <strong>Saída:</strong><input type="checkbox" name="opcao" value="saida" class="form-check-input"
+                id="opcao">
+        </div>
+        <div class="col-auto">
+            <strong>Funcionario:</strong>
+            <select name="id" id="" class="form-control" required>
+                {{#each usersAusencia}}
+                <option value="{{matricula}}">{{nome_completo}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" id="confirm" class="btn btn-primary">Confirmar</button>
+        </div>
+    </form>
+</div>
+
+<div class="box" id="boxFinal">
+    <form action="/PoloUAB/adm/ausencia" method="post" class="row ">
+        <h4>Ausência/Férias</h4>
+        <div class="col-auto">
+            <strong>Data de Entrada:</strong><input type="date" name="entrada" id="calendario" class="form-control" required>
+        </div>
+        <div class="col-auto">
+            <strong>Data de Saída:</strong><input type="date" name="saida" id="calendario" class="form-control" required>
+        </div>
+        <div id="boxes" class="col-auto">
+            <strong>Férias:</strong><input type="checkbox" name="opcao" value="ferias" class="form-check-input"
+                id="opcao">
+            <strong>Atestado:</strong><input type="checkbox" name="opcao" value="atestado" class="form-check-input"
+                id="opcao">
+        </div>
+        <div class="col-auto">
+            <strong>Funcionario:</strong>
+            <select name="id" id="" class="form-control" required>
+                {{#each usersAusencia}}
+                <option value="{{matricula}}">{{nome_completo}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" id="confirm" class="btn btn-primary">Confirmar</button>
+        </div>
+    </form>
+</div>
+
+
+<script src="/js/admin/horarios.js"></script>

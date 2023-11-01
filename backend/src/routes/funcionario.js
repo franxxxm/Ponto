@@ -5,10 +5,10 @@ const router = express.Router();
 //const DadosToken = require("../middlewares/receberDadosToken");
 
 router.post("/funcionario",  FuncionarioControllers.createFuncionario);
-router.get("/funcionario/adm", FuncionarioControllers.getAllFuncionario);
+router.get("/funcionario", FuncionarioControllers.getAllFuncionario);
 router.get("/funcionario/:id",  FuncionarioControllers.getIdFuncionario);
 router.delete("/funcionario/:id", FuncionarioControllers.deleteFuncionario);
 router.put("/funcionario/:id",  FuncionarioControllers.setFuncionario);
-router.post("/funcionario/login", FuncionarioControllers.login);
+router.put("/funcionario/senha/:id", FuncionarioControllers.setSenha);
 
 module.exports = router

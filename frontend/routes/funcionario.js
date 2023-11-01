@@ -8,6 +8,10 @@ const offline = require("../middlewares/rotaOffline")
 const estruturaAno = require('../config/estruturaAno')
 const estruturaDia = require("../config/estruturaDia")
 const estruturaMes = require("../config/estruturaMes")
+const verificarRegistro = require("../config/verificarRegistro")
+const FuncionarioBd = require("../bd/FuncionarioBd");
+const HorarioBd = require("../bd/HorarioBd")
+const auth = require("../middlewares/auth")
 
 routes.use((req, res, next) => {
 
@@ -37,30 +41,22 @@ routes.use((req, res, next) => {
     }
     //criar sessão se o usuario ja se registrou hoje 
     if (req.session.entrada) {
-
-        const data = new Date();
-        const dia = data.getDate();
-        const mes = data.getMonth() + 1;
-        const ano = data.getFullYear();
-        axios.post(`http://192.168.88.15:2000/api/verificar`, {
-            id_usuario: req.session.user,
-            mes: mes,
-            dia: dia,
-            ano: ano
-        }).then(dados => {
+        HorarioBd.verificar(req.session.user).then(dados => {
+            const horarios = dados.data
             const {
-                data
-            } = dados
-            req.session.entrada = data.entrada
-            req.session.saida = data.saida
+                entrada,
+                saida
+            } = verificarRegistro(horarios)
+            req.session.entrada = entrada
+            req.session.saida = saida
         })
     }
 
-    const admNot = ['/Registrar-Horario']
+    const admNot = ['/registrar-horario']
 
-    if(req.session.adm > 0){
-        if(req.url == admNot[0]){
-            //return res.redirect("/PoloUAB/adm/menu")
+    if (req.session.adm > 0) {
+        if (req.url == admNot[0]) {
+            return res.redirect("/PoloUAB/adm/home")
         }
     }
     next();
@@ -68,49 +64,31 @@ routes.use((req, res, next) => {
 
 
 
-routes.get("/Home", online, (req, res) => {
-    axios.get(`http://192.168.88.15:2000/api/funcionario/${req.session.user}`, {
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(dados => {
+routes.get("/home", online, (req, res) => {
+    HorarioBd.verificar(req.session.user).then(dados => {
+        const horarios = dados.data
         const {
-            data
-        } = dados
-        const date = new Date();
-        const dia = date.getDate();
-        const mes = date.getMonth() + 1;
-        const ano = date.getFullYear();
-        axios.post(`http://192.168.88.15:2000/api/verificar`, {
-            id_usuario: req.session.user,
-            mes: mes,
-            dia: dia,
-            ano: ano
-        }).then(horarios => {
-            const data1 = horarios.data
-            res.render('./funcionario/home.hbs', {
-                nome: data[0].nome_completo,
-                matricula: data[0].matricula,
-                user: req.session.user,
-                adm: req.session.adm,
-                menu: true,
-                entrada:data1.entrada,
-                saida:data1.saida
-            })
+            registro,
+            entrada,
+            saida
+        } = verificarRegistro(horarios)
+        res.render('./funcionario/home.hbs', {
+            nome: horarios[0].nome_completo,
+            matricula: horarios[0].matricula,
+            user: req.session.user,
+            adm: req.session.adm,
+            registro,
+            menu: true,
+            entrada,
+            saida
         })
     })
 })
 
 routes.get("/historico", online, (req, res) => {
-    axios.get(`http://192.168.88.15:2000/api/horarios/${req.session.user}`, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(dados => {
-        const {
-            data
-        } = dados
-        if (data.length < 1) {
+    FuncionarioBd.getFuncionarioId(req.session.user).then(dados => {
+        const funcionario = dados.data
+        if (funcionario.length < 1) {
             return res.render("./funcionario/historico.hbs", {
                 registro: false,
                 user: req.session.user || null,
@@ -121,22 +99,16 @@ routes.get("/historico", online, (req, res) => {
         const date = new Date()
         const anoAtual = req.query.ano || date.getFullYear()
         const mesAtual = req.query.mes || date.getMonth() + 1
-        const ano = estruturaAno(data, anoAtual)
+        const ano = estruturaAno(funcionario, anoAtual)
         const mes = estruturaMes(mesAtual)
-        axios.post(`http://192.168.88.15:2000/api/historico`, {
-            id_usuario: req.session.user,
-            mes: mesAtual,
-            ano: anoAtual,
-        }).then(dados => {
-            const {
-                data
-            } = dados
-            const estruturaMesVar = estruturaDia(data, anoAtual, mesAtual)
+        HorarioBd.historico(req.session.user, mesAtual, anoAtual).then(dados => {
+            const horarios = dados.data
+            const estruturaMesVar = estruturaDia(horarios, anoAtual, mesAtual)
             res.render("./funcionario/historico.hbs", {
-                ano: ano,
-                mes: mes,
+                ano,
+                mes,
                 dados: estruturaMesVar,
-                registro: data.length == 0 ? false : true,
+                registro: horarios.length == 0 ? false : true,
                 user: req.session.user || null,
                 adm: req.session.adm || null,
                 historico: true
@@ -145,110 +117,61 @@ routes.get("/historico", online, (req, res) => {
     })
 })
 
-routes.get("/registrar-Horario", online, (req, res) => {
-    const data = new Date();
-    const dia = data.getDate();
-    const mes = data.getMonth() + 1;
-    const ano = data.getFullYear();
-    axios.post(`http://192.168.88.15:2000/api/verificar`, {
-        id_usuario: req.session.user,
-        mes: mes,
-        dia: dia,
-        ano: ano
-    }).then(dados => {
+routes.get("/registrar-horario", online, (req, res) => {
+    HorarioBd.verificar(req.session.user).then(dados => {
+        const horarios = dados.data
         const {
-            data
-        } = dados
-
+            registro,
+            entrada,
+            saida
+        } = verificarRegistro(horarios)
         res.render("./funcionario/registrarHorario.hbs", {
             user: req.session.user || null,
             adm: req.session.adm || null,
+            registro,
             sucesso: req.flash('sucesso'),
             erro: req.flash('erro'),
-            entrada: data.entrada,
-            saida: data.saida,
-            hora: true,
+            entrada,
+            saida,
+            hora: true
         })
     })
-
 })
 
 
-routes.post("/registrar-Horario", (req, res) => {
+routes.post("/registrar-horario", (req, res) => {
     const botao = req.body.botao
-
     if (req.session.entrada && botao == 'entrada') {
-        return res.redirect("/PoloUAB/Registrar-Horario")
+        return res.redirect("/PoloUAB/registrar-horario")
     }
-
     if (botao == 'entrada' && req.session.entrada != true) {
         const entrada = req.body.botao == 'entrada' ? 1 : 0
         const saida = req.body.botao == 'saida' ? 1 : 0
-        var data = new Date();
-        var hora = data.getHours();
-        var minutos = data.getMinutes();
-        const dia = data.getDate();
-        const mes = data.getMonth() + 1;
-        const ano = data.getFullYear();
-        if (hora < 10) hora = "0" + hora;
-        if (minutos < 10) minutos = "0" + minutos;
-        var horaAtual = hora + ":" + minutos
-
-        axios.post(`http://192.168.88.15:2000/api/horarios`, {
-            entrada: entrada,
-            saida: saida,
-            hora: horaAtual,
-            dia: dia,
-            mes: mes,
-            ano: ano,
-            id_usuario: req.session.user
-        }).then(dados => {
-            const {
-                data
-            } = dados
-
-            if (data.mensagem) {
+        HorarioBd.horarios_entrada(req.session.user, entrada, saida).then(dados => {
+            const horarios = dados.data
+            if (horarios.mensagem) {
                 req.session.entrada = true
                 req.flash('sucesso', `Entrada Registrada!`)
-                return res.redirect('/PoloUAB/Registrar-Horario')
+                return res.redirect('/PoloUAB/registrar-horario')
             }
-
-            req.flash('erro', `Erro ao Regustrar`)
-            return res.redirect('/PoloUAB/Registrar-Horario')
+            req.flash('erro', `Erro ao Registrar`)
+            return res.redirect('/PoloUAB/registrar-horario')
         })
 
     }
 
     if (botao == 'saida' && req.session.saida != true) {
-        var data = new Date();
-        var hora = data.getHours();
-        var minutos = data.getMinutes();
-        const dia = data.getDate();
-        const mes = data.getMonth() + 1;
-        const ano = data.getFullYear();
-        if (hora < 10) hora = "0" + hora;
-        if (minutos < 10) minutos = "0" + minutos;
-        var horaAtual = hora + ":" + minutos
+        HorarioBd.horarios_saida(req.session.user).then(dados => {
+            const horarios = dados.data
 
-        axios.post(`http://192.168.88.15:2000/api/horario-saida`, {
-            hora_saida: horaAtual,
-            dia: dia,
-            mes: mes,
-            ano: ano,
-            id_usuario: req.session.user
-        }).then(dados => {
-            const {
-                data
-            } = dados
-
-            if (data.mensagem) {
+            if (horarios.mensagem) {
                 req.session.saida = true
                 req.flash('sucesso', `Saida Registrada!`)
-                return res.redirect('/PoloUAB/Registrar-Horario')
+                return res.redirect('/PoloUAB/registrar-horario')
             }
 
             req.flash('erro', `Erro ao Registrar`)
-            return res.redirect('/PoloUAB/Registrar-Horario')
+            return res.redirect('/PoloUAB/registrar-horario')
         })
     }
 })
@@ -261,23 +184,7 @@ routes.get("/login", offline, (req, res) => {
     })
 
 })
-routes.post("/login", (req, res) => {
-    axios.post(`http://192.168.88.15:2000/api/funcionario/login`, {
-        matricula: req.body.matricula,
-        senha: req.body.senha
-    }).then(dados => {
-        const {
-            data
-        } = dados
-        if (data.mensagem) {
-            req.flash('sucesso', 'Logado com sucesso ' + data.nome)
-            req.session.token = data.token
-            return res.redirect("/PoloUAB/Registrar-Horario")
-        }
-        req.flash('erro', data.erro)
-        return res.redirect("/PoloUAB/login")
-    })
-})
+routes.post("/login", auth, (req, res) => {})
 
 
 routes.get("/registro", offline, (req, res) => {
@@ -288,14 +195,12 @@ routes.get("/registro", offline, (req, res) => {
 })
 
 routes.post("/registro", (req, res) => {
-    const usuario = [
-        req.body.senha, req.body.matricula, req.body.nome
-    ]
-    axios.post(`http://192.168.88.15:2000/api/funcionario`, {
-        matricula: usuario[1],
-        senha: usuario[0],
-        nome_completo: usuario[2]
-    }).then(dados => {
+    const saltRounds = 10;
+    const senha = req.body.senha
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(senha, salt)
+    req.body.senha = hash
+    FuncionarioBd.creatFuncionario(req.body.matricula, req.body.senha, req.body.nome).then(dados => {
         const {
             data
         } = dados
@@ -306,7 +211,6 @@ routes.post("/registro", (req, res) => {
         }
 
         if (!data.mensagem) {
-            console.log('erro')
             req.flash('erro', 'Essa matricula já esta registrada')
             return res.redirect("/PoloUAB/registro")
         }

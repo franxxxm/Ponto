@@ -25,8 +25,8 @@ const createFuncionario = async ({
 }
 
 const getAllFuncionario = async () => {
-    const sql = "SELECT * FROM usuarios"
-    const usuario = await bd.query(sql);
+    const sql = "SELECT * FROM usuarios WHERE adm = 0"
+    const [usuario] = await bd.query(sql);
 
     return usuario
 }
@@ -38,11 +38,21 @@ const getIdFuncionario = async (matricula) => {
 }
 
 const deleteFuncionario = async (matricula) => {
+    const sqlHorarios = `DELETE FROM horarios WHERE id_usuarios = '${matricula}'`
+    const horarios = bd.query(sqlHorarios)
+
     const sql = `DELETE FROM usuarios WHERE matricula = '${matricula}' `
     const usuario = bd.query(sql)
 
     return usuario
 }
+const setSenha = (matricula, {senha})=>{
+    const sql = `UPDATE usuarios SET senha = '${senha}' WHERE matricula = '${matricula}'`
+    const usuario = bd.query(sql)
+
+    return usuario
+}
+
 
 const setFuncionario = async (matricula, {
     nome_completo,
@@ -55,21 +65,6 @@ const setFuncionario = async (matricula, {
     return usuario;
 }
 
-const login = async ({
-    matricula,
-    senha
-}) => {
-    const sql = `SELECT * FROM usuarios WHERE matricula = '${matricula}'`;
-    const [resultMatricula] = await bd.query(sql)
-    if (resultMatricula.length <= 0) return false;
-    return {
-        nome:resultMatricula[0].nome_completo,
-        matricula: resultMatricula[0].matricula,
-        adm:resultMatricula[0].adm,
-        senha: resultMatricula[0].senha,
-        senhaUser: senha
-    }
-}
 
 module.exports = {
     createFuncionario,
@@ -77,5 +72,6 @@ module.exports = {
     getIdFuncionario,
     deleteFuncionario,
     setFuncionario,
-    login
+    setSenha,
+  
 }
