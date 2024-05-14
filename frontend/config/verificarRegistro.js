@@ -9,6 +9,9 @@ module.exports = (horarios)=>{
         if (horarios[0].entrada == 1) {
             return {registro:true, entrada:true, saida:false}
         }
+        if(horarios[0].entrada == 0 && horarios[0].saida == 0){
+            return {registro:false, entrada:false, saida:false}
+        }
     }
     if(horarios.length <= 0){
         return {registro:false, entrada:false, saida:false}

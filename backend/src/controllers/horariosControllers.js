@@ -56,12 +56,32 @@ const verificarRegistro = async (req, res) => {
     return res.status(201).json(result)
 }
 
+const verificarAll = async (req, res)=>{
+    const result = await horarios.verificarAll(req.body)
+
+    return res.status(201).json(result)
+}
+
+const deleteHorario = async (req, res)=>{
+
+    try {
+        const result = await horarios.deleteHorario(req.body.opcao, req.params.id)
+        
+        return res.status(201).json(result)
+    } catch (erro) {
+        console.log(erro)
+        return res.status(500).json({mesagem:'erro no server'})
+    }
+}
+
 module.exports = {
+    deleteHorario,
     createHorarios,
     getHorariosIdUser,
     verificarRegistro,
     editHorarios,
     upHorarioSaida,
     getHorariosHistorico,
-    getHorariosAno
+    getHorariosAno,
+    verificarAll
 }

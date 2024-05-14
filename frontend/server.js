@@ -8,8 +8,10 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const handlebars = require('handlebars');
 const flash = require("connect-flash");
+const cors = require('cors')
 
 
+app.use(cors())
 
 //cookie
 app.use(cookieParser());
@@ -44,13 +46,18 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,"public")));
 
+app.get('/', (req, res)=>[
+  res.send('teste')
+])
 
 //rotas 
 const funcionario = require("./routes/funcionario.js");
 const admin = require("./routes/administrador")
 
+
 app.use("/PoloUAB", funcionario);
 app.use("/PoloUAB/adm", admin);
+
 
 app.listen(3030, ()=>{
     console.log('http://localhost:3030/teste')

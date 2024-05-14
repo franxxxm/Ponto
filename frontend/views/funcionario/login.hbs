@@ -2,20 +2,23 @@
 <link rel="stylesheet" href="/css/usuario/login.css">
 
     <form  method="POST" >
-    <div class="box">
-        <div class="row">
-            <div class="col-md-12 ">
-                <p><strong>Matrícula:</strong></p>
+        <div id="centralizar">
+
+        <div id="box" class="row row-cols-1 justify-content-md-center ">
+            <div class="col-12">
+                <label><strong>Matrícula:</strong></label>
                 <input type="number" class="form-control" name="matricula" placeholder="Matricula" required>
             </div>
-            <div class="col-md-12 mt-2">
-                <p><strong>Senha:</strong></p>
+             <div class="col-12 mt-4">
+                <label><strong>Senha:</strong></label>
                 <input type="password" class="form-control" name="senha" placeholder="Senha" required>
             </div>
-            <div class="col-md-12 mt-4">
+        
+             <div class="col-12 mt-4">
             <button type="submit" id="confirm" class="btn btn-primary">Confirmar</button>
             </div>
         </div>
-    </div>
+        </div>
+  
 
 </form>

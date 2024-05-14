@@ -1,14 +1,15 @@
-module.exports = (data, selecionado)=>{
-    var anoAtual = data[0].ano
+module.exports = (data, anoAtual)=>{
+    var anoAtual = anoAtual
     var ano = []
+    var year = []
+    var filtro
     for (key in data) {
-           if(anoAtual == data[key].ano){
-            const filtro = ano.filter(ano => ano == data[key].ano)
+            filtro = year.filter(year => year == data[key].ano)
             if(filtro.length == 0){
-                ano.push({ano:data[key].ano, selecionado:selecionado == data[key].ano ? true : null})
-                anoAtual++
+                year.push(data[key].ano)
+                ano.push({ano:data[key].ano, selecionado:anoAtual == data[key].ano ? true : null})
             }
-           }
+           
     }
     return ano
 }

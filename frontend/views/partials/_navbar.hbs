@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/css/navbar.css">
 
 <nav class="navbar navbar-expand-md navbar-dark">
-    <a class="navbar-brand" href="/PoloUAB/menu">PoloUAB</a>
+    <a class="navbar-brand" href="/PoloUAB/{{#if adm}}adm/home{{else}}/home{{/if}}">PoloUAB</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -19,8 +19,16 @@
                         class="bi {{#if hora}} bi-clock-fill {{else}} bi-clock {{/if}}"></i> Horarios</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{#if feriados}}active{{/if}}" href="/PoloUAB/adm/feriados"><i
+                        class="bi {{#if feriados}} bi-calendar2-week-fill {{else}} bi-calendar2-week {{/if}}"></i> Feriados</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{#if usuarios}}active{{/if}}" href="/PoloUAB/adm/usuarios"><i
                         class="bi {{#if usuarios}} bi-people-fill {{else}} bi-people {{/if}}"></i> Usuarios</a>
+            </li>
+              <li class="nav-item {{#if registro}}active{{/if}}">
+                <a class="nav-link" href="/PoloUAB/adm/registro"><i
+                        class="bi bi {{#if registro}} bi-person-vcard-fill {{else}} bi-person-vcard {{/if}}"></i> Cadastro</a>
             </li>
 
             {{else}}
@@ -45,11 +53,6 @@
             <li class="nav-item">
                 <a class="nav-link {{#if login}}active{{/if}}" href="/PoloUAB/login"><i
                         class="bi {{#if login}} bi-person-fill-add {{else}} bi-person-add {{/if}}"></i> Login</a>
-            </li>
-            <li class="nav-item {{#if registro}}active{{/if}}">
-                <a class="nav-link" href="/PoloUAB/registro"><i
-                        class="bi bi {{#if registro}} bi-person-vcard-fill {{else}} bi-person-vcard {{/if}}"></i>
-                    Registro</a>
             </li>
             {{/if}}
 

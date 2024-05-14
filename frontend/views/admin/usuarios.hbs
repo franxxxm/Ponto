@@ -1,4 +1,4 @@
-    <link rel="stylesheet" href="/css/admin/usuario.css">
+    <link rel="stylesheet" href="/css/admin/usuarios.css">
     <form method="POST">
 <div class="col-12">
     <table class="table table-bordered table-dark mt-4">
@@ -15,9 +15,9 @@
                 <td>{{matricula}}</td>
                 <td>{{nome_completo}}</td>
                 <td class="text-center">
-                <a href="/PoloUAB/adm/historico/{{matricula}}" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Historico"><i id="icones" class="bi bi-calendar-week-fill"></i></a>  
-                <a href="/PoloUAB/adm/senha/{{matricula}}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Mudar Senha"><i class="bi bi-recycle"></i></a>
-                <a href="/PoloUAB/adm/excluir/{{matricula}}" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Excluir"><i class="bi bi-trash3-fill"></i></a> 
+                <a href="/PoloUAB/adm/historico/{{matricula}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Historico"><i id="icones" class="bi bi-calendar-week"></i></a>  
+                <a href="/PoloUAB/adm/senha/{{matricula}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Mudar Senha"><i id="icones" class="bi bi-recycle"></i></a>
+                <a href="/PoloUAB/adm/ausencias/{{matricula}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Ausencias"><i id="icones" class="bi bi-clipboard2-check"></i></a> 
                 </td>
             </tr>
             {{/each}}

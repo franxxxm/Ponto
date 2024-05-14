@@ -8,9 +8,7 @@ nav{
 
 .navbar{
   background-color: #0948a7;
-}
-@media (max-width: 761px){
- 
+  min-width: 310px;
 }
 
 .nav-link{

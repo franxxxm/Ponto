@@ -3,6 +3,7 @@
     const horaRegistrar = document.getElementById("hora")
     const load = document.getElementById('carregar')
     const form = document.getElementById('form')
+    const publicKey = "BFIh0Kb4ibNx0HMqyZSfoYjPk84RHwWYhfP1Kv8wRlInctewiXjzpoW_B-9KGuGJx8V_VdpoLi0kCPw9ix5nXOg"
 
     load.innerHTML += `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
 
@@ -25,7 +26,4 @@
 
   const enviar = ()=>{
     const e = window.confirm('Deseja confirmar?')
-    console.log(e)
   } 
-
-  

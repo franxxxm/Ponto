@@ -5,20 +5,23 @@ const bd = require("./bd")
 const createFuncionario = async ({
     nome_completo,
     senha,
-    matricula
+    matricula,
+    cargo
 }) => {
     const sql2 = `SELECT * FROM usuarios WHERE matricula = ${matricula}`
     const [resul] = await bd.query(sql2)
+    console.log(resul.length > 0)
     if(resul.length > 0){
         return false;
     }
 
     const usuario = {
-        nome_completo: nome_completo,
-        senha: senha,
-        matricula: matricula
+        nome_completo,
+        senha,
+        matricula,
+        cargo,
     }
-    const sql = `INSERT INTO usuarios(nome_completo, senha, matricula) VALUES('${usuario.nome_completo}', '${usuario.senha}', '${usuario.matricula}')`
+    const sql = `INSERT INTO usuarios(nome_completo, senha, matricula, cargo, log) VALUES('${usuario.nome_completo}', '${usuario.senha}', '${usuario.matricula}', '${usuario.cargo}', 0)`
     const [resultado] = await bd.query(sql);
 
     return true;
@@ -47,12 +50,11 @@ const deleteFuncionario = async (matricula) => {
     return usuario
 }
 const setSenha = (matricula, {senha})=>{
-    const sql = `UPDATE usuarios SET senha = '${senha}' WHERE matricula = '${matricula}'`
+    const sql = `UPDATE usuarios SET senha = '${senha}', log = '${1}' WHERE matricula = '${matricula}'`
     const usuario = bd.query(sql)
 
     return usuario
 }
-
 
 const setFuncionario = async (matricula, {
     nome_completo,

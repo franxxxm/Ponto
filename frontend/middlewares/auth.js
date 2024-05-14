@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
-const FuncionarioBd = require('../bd/FuncionarioBd')
+const FuncionarioBd = require('../models/FuncionarioBd')
 
 module.exports = async (req, res, next)=>{
     const matricula = req.body.matricula

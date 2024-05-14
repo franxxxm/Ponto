@@ -5,12 +5,7 @@ const bcrypt = require("bcrypt");
 const createFuncionario = async (req, res) => {
     const usuario = await modelsFuncionario.createFuncionario(req.body);
 
-    if (!usuario) return res.status(200).json({
-        mensagem: false
-    });
-    res.status(200).json({
-        mensagem: true
-    });
+    return res.status(200).json({mensagem: usuario});
 }
 
 const getAllFuncionario = async (req, res) => {

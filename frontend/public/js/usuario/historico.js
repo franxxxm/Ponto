@@ -5,7 +5,7 @@ const formulario = document.getElementById('form');
 
 selectMes.addEventListener('change', () => {
   formulario.submit();
-});
+})
 
 selectAno.addEventListener('change', ()=>{
     formulario.submit();

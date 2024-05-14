@@ -8,6 +8,7 @@ routes.get('/ausencia', ausenciaControllers.getAusencia)
 routes.get('/ausencia/:id', ausenciaControllers.getAusenciaId)
 routes.post('/ausencia/delete/:id', ausenciaControllers.deleteAusencia)
 routes.post('/ausencia', ausenciaControllers.createAtestado)
+routes.delete('/ausencia/:id', ausenciaControllers.delet)
 
 
 

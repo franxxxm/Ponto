@@ -4,7 +4,9 @@
     {{#each dadosAusencia}}
     <div class="alert alert-primary" id="alerta">
         <i class="bi bi-info-circle-fill"></i>
-        <strong>{{nome_completo}} | {{matricula}} | Entrada:{{data_entrada}} | Volta:{{data_saida}}</strong>
+        {{#if data_saida}} <strong>{{nome_completo}} | {{matricula}} | Entrada:{{data_entrada}} |
+            Volta:{{data_saida}}</strong> {{else}} <strong>{{nome_completo}} | {{matricula}} |
+            Entrada:{{data_entrada}}</strong> {{/if}}
     </div>
     {{/each}}
 </div>
@@ -39,14 +41,39 @@
     </form>
 </div>
 
+
+<div class="box">
+    <form action="/PoloUAB/adm/feriados" method="post" class="row ">
+        <h4>Feriados</h4>
+        <div class="col-auto">
+            <strong>Nome:</strong><input type="text" name="nome" id="nome" class="form-control" required>
+        </div>
+        <div id="boxes" class="col-auto">
+            <strong>Nacional:</strong><input type="checkbox" name="nacional" value="1" class="form-check-input"
+                id="opcao">
+        </div>
+        <div class="col-auto">
+            <strong>Data-1:</strong><input type="date" name="data1" lang="pt-br" id="calendario" class="form-control"
+                required>
+        </div>
+        <div class="col-auto">
+            <strong>Data-2:</strong><input type="date" name="data2" id="calendario" class="form-control">
+        </div>
+        <div class="col-auto">
+            <button type="submit" id="confirm" class="btn btn-primary">Confirmar</button>
+        </div>
+    </form>
+</div>
+
 <div class="box" id="boxFinal">
     <form action="/PoloUAB/adm/ausencia" method="post" class="row ">
         <h4>Ausência/Férias</h4>
         <div class="col-auto">
-            <strong>Data de Entrada:</strong><input type="date" name="entrada" id="calendario" class="form-control" required>
+            <strong>Data de Entrada:</strong><input type="date" name="entrada" id="calendario" class="form-control"
+                required>
         </div>
         <div class="col-auto">
-            <strong>Data de Saída:</strong><input type="date" name="saida" id="calendario" class="form-control" required>
+            <strong>Data de Saída:</strong><input type="date" name="saida" id="calendario" class="form-control">
         </div>
         <div id="boxes" class="col-auto">
             <strong>Férias:</strong><input type="checkbox" name="opcao" value="ferias" class="form-check-input"

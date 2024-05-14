@@ -29,6 +29,18 @@ const createHorario = async ({
     return horario;
 }
 
+const deleteHorario = async (opcao, id)=>{
+    if(opcao == 'entrada'){
+        const sql = `DELETE FROM horarios WHERE id_horario = '${id}'`
+        const horario = await bd.query(sql)
+        return horario
+    }
+    const sql = `UPDATE  horarios SET hora_saida = '', saida = '${0}' WHERE id_horario = '${id}'`
+    const horarios = await bd.query(sql)
+
+    return horarios
+}
+
 const editHorarios = async ({
     hora,
     id_usuario,
@@ -104,26 +116,46 @@ const getHorariosHistorico = async ({
 }
 
 const verificarRegistro = async ({
-    id_usuario,
+    id,
     dia,
     mes,
     ano
 }) => {
-    const sql = `SELECT * FROM horarios JOIN usuarios ON horarios.id_usuarios = usuarios.matricula WHERE  id_usuarios = '${id_usuario}' AND ano = '${ano}' AND mes = '${mes}' AND dia = '${dia}'`
+    const sql2 = `SELECT * FROM usuarios WHERE matricula = ${id}`
+
+    const sql = `SELECT * FROM horarios JOIN usuarios ON horarios.id_usuarios = usuarios.matricula WHERE  id_usuarios = ${id} AND ano = ${ano} AND mes = ${mes} AND dia = ${dia}`
+    
+    const [usuario] = await bd.query(sql2)
     const [horario] = await bd.query(sql)
 
+    if(horario == ''){
+            const usuarios = [{matricula:usuario[0].matricula, nome_completo:usuario[0].nome_completo, entrada:0, saida:0}] 
+            return usuarios
+    }
+    
     return horario
+}
+
+
+const verificarAll =  async ({ano, mes, dia})=>{
+    const sql = `SELECT * FROM horarios JOIN usuarios ON horarios.id_usuarios = usuarios.matricula WHERE ano = ${ano} AND mes = ${mes} AND dia = ${dia}`
+
+    const [result] = await bd.query(sql)
+
+    return result
 }
 
 
 
 
 module.exports = {
+    deleteHorario,
     createHorario,
     getHorariosIdUser,
     verificarRegistro,
     editHorarios,
     upHorarioSaida,
     getHorariosHistorico,
-    getHorariosAno
+    getHorariosAno,
+    verificarAll
 }

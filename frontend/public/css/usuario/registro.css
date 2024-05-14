@@ -5,10 +5,19 @@
   font-size: 17px;
 }
 
-.box{
-  margin-top: 50px;
-  padding: 50px;
-  border-radius: 50px;
-  background-color: #0948a7;
-  min-width: 300px; 
+#centralizar{
+  display: flex;
+  justify-content: center;
+ }
+
+#box{
+  display: flex;
+  justify-content: center;
+   margin-top: 50px;
+   padding: 50px;
+   border-radius: 50px;
+   background-color: #0948a7;
+   max-width: 700px;
 }
+
+

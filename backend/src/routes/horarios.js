@@ -10,6 +10,8 @@ router.post("/horarios/edit", horarios.editHorarios)
 router.post("/horarios", horarios.createHorarios)
 router.post("/verificar", horarios.verificarRegistro)
 router.post("/horario-saida", horarios.upHorarioSaida)
+router.post("/verificar/all", horarios.verificarAll)
+router.put('/deleteHorario/:id', horarios.deleteHorario)
 
 
 
