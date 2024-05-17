@@ -1,9 +1,9 @@
 const { default: axios } = require("axios");
-
+require('dotenv').config()
 
 const getAll = async ()=>{ 
     try {
-      return await axios.get('http://192.168.88.52:2000/api/ferias')  
+      return await axios.get(`http://${process.env.IP}/api/ferias`)  
     } catch (error) {
         console.log(error)
     }
@@ -12,7 +12,7 @@ const getAll = async ()=>{
 
 const create = async (nome, data, dataSec, nacional)=>{
     try {
-	return await axios.post('http://192.168.88.52:2000/api/ferias', {nome, data, dataSec, nacional})
+	return await axios.post(`http://${process.env.IP}/api/ferias`, {nome, data, dataSec, nacional})
 } catch (error) {
 	console.log(error)
 }
@@ -21,7 +21,7 @@ const create = async (nome, data, dataSec, nacional)=>{
 
 const delet = async (id) =>{
     try {
-	return await axios.delete(`http://192.168.88.52:2000/api/ferias/${id}`)
+	return await axios.delete(`http://${process.env.IP}/api/ferias/${id}`)
 } catch (error) {
 	console.log(error)
 }

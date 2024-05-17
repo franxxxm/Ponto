@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize('bd_ponto','root',process.env.MYSQL_PASSWORD,{
-    host:process.env.MYSQL_HOST,
+require('dotenv').config();
+const sequelize = new Sequelize('bd_ponto', process.env.USER, process.env.PASSWORD,{
+    host:process.env.HOST,
+    port:process.env.PORT,
     dialect:'mysql',
     define:{
         charset:'utf8',

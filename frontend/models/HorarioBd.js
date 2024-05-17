@@ -1,11 +1,11 @@
 const {
     default: axios
 } = require("axios")
-
+require('dotenv').config()
 
 const historicoAdm = async (id_usuario) => {
     try {
-        const dados = await axios.get(`http://192.168.88.52:2000/api/horarios/${id_usuario}`)
+        const dados = await axios.get(`http://${process.env.IP}/api/horarios/${id_usuario}`)
         return dados
     } catch (error) {
         return console.log(error)
@@ -15,7 +15,7 @@ const historicoAdm = async (id_usuario) => {
 
 const deleteHorarios = async (opcao, id)=>{
     try {
-        return await axios.put(`http://192.168.88.52:2000/api/deleteHorario/${id}`, {
+        return await axios.put(`http://${process.env.IP}/api/deleteHorario/${id}`, {
             opcao
         })
     } catch (erro) {
@@ -25,7 +25,7 @@ const deleteHorarios = async (opcao, id)=>{
 
 const historico = (id_usuario, mes, ano) => {
     try {
-        return axios.post(`http://192.168.88.52:2000/api/historico`, {
+        return axios.post(`http://${process.env.IP}/api/historico`, {
             id_usuario,
             mes,
             ano
@@ -38,7 +38,7 @@ const historico = (id_usuario, mes, ano) => {
 const editar_horarios = (dia, mes, ano, hora, data, id_usuario) => {
     try {
 
-        return axios.post(`http://192.168.88.52:2000/api/horarios/edit`, {
+        return axios.post(`http://${process.env.IP}/api/horarios/edit`, {
             dia,
             mes,
             ano,
@@ -59,7 +59,7 @@ const verificar = (id) => {
         const mes = date.getMonth() + 1;
         const ano = date.getFullYear();
         console.log(id)
-        return axios.post(`http://192.168.88.52:2000/api/verificar`, {
+        return axios.post(`http://${process.env.IP}/api/verificar`, {
             id,
             dia,
             mes,
@@ -78,7 +78,7 @@ const verificarAll = () => {
         const mes = date.getMonth() + 1;
         const ano = date.getFullYear();
     
-        return axios.post(`http://192.168.88.52:2000/api/verificar/all`, {
+        return axios.post(`http://${process.env.IP}/api/verificar/all`, {
             dia,
             mes,
             ano
@@ -101,7 +101,7 @@ const horarios_entrada = (id_usuario, entrada, saida) => {
         if (minutos < 10) minutos = "0" + minutos;
         hora = hora + ":" + minutos
         data = data.toLocaleDateString()
-        return axios.post(`http://192.168.88.52:2000/api/horarios`, {
+        return axios.post(`http://${process.env.IP}/api/horarios`, {
             entrada,
             saida,
             hora,
@@ -119,7 +119,7 @@ const horarios_entrada = (id_usuario, entrada, saida) => {
 const editar_horarios_saida = (dia, mes, ano, hora_saida, id_usuario) => {
     try {
         
-        return axios.post(`http://192.168.88.52:2000/api/horario-saida`, {
+        return axios.post(`http://${process.env.IP}/api/horario-saida`, {
             hora_saida,
             dia,
             mes,
@@ -143,7 +143,7 @@ const horarios_saida = (id_usuario) => {
         if (hora < 10) hora = "0" + hora;
         if (minutos < 10) minutos = "0" + minutos;
         var hora_saida = hora + ":" + minutos
-        return axios.post(`http://192.168.88.52:2000/api/horario-saida`, {
+        return axios.post(`http://${process.env.IP}/api/horario-saida`, {
             hora_saida,
             dia,
             mes,

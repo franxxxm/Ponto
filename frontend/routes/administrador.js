@@ -15,7 +15,7 @@ const FormatarData = require("../config/FormatandoDataPtBR");
 const bcrypt = require('bcrypt')
 const estruturaPdf = require("../config/estruturaPdf");
 
-/*
+
 routes.use((req, res, next) => {
     if (req.session.adm > 0) {
         return next()
@@ -23,15 +23,14 @@ routes.use((req, res, next) => {
     req.flash('erro', ' Sem permissão para acessar essa página')
     return res.redirect('/PoloUAB/home')
 })
-*/
-
-routes.post("/entrada-saida", (req, res) => {
+//rota para apagar 
+routes.post("/entrada-saida", online, (req, res) => {
     const { opcao, idUser, idHorario, mes, ano } = req.body
-    if(opcao == 'entrda'){
+    if (opcao == 'entrda') {
         req.session.entrada = false
     }
-    if(opcao == 'saida'){
-        req.session.saida = false   
+    if (opcao == 'saida') {
+        req.session.saida = false
     }
     HorarioBd.deleteHorarios(opcao, idHorario).then(dados => {
         return res.redirect(`/polouab/adm/historico/${idUser}?mes=${mes}&ano=${ano}`)
@@ -55,7 +54,6 @@ routes.get("/usuarios", online, (req, res) => {
         })
     })
 })
-
 
 routes.get("/pdf/:id", online, (req, res) => {
     HorarioBd.historicoAdm(req.params.id).then(dados => {
@@ -174,7 +172,7 @@ routes.get('/ausencia-excluir/:id', online, (req, res) => {
 })
 
 
-routes.get("/registro", online, (req, res) => {
+routes.get("/cadastro", online, (req, res) => {
     res.render("./funcionario/registro.hbs", {
         user: req.session.user,
         adm: req.session.adm,
@@ -184,7 +182,7 @@ routes.get("/registro", online, (req, res) => {
     })
 })
 
-routes.post("/registro", online,  (req, res) => {
+routes.post("/cadastro", online, (req, res) => {
     const saltRounds = 10;
     const senha = "123"
     const salt = bcrypt.genSaltSync(saltRounds);
@@ -197,15 +195,15 @@ routes.post("/registro", online,  (req, res) => {
         console.log(data.mensagem)
         if (data.mensagem) {
             req.flash('sucesso', 'Cadastrado com sucesso')
-            return res.redirect("/PoloUAB/adm/registro")
+            return res.redirect("/PoloUAB/adm/cadastro")
         }
 
         if (!data.mensagem) {
             req.flash('erro', 'Essa matricula já esta registrada')
-            return res.redirect("/PoloUAB/adm/registro")
+            return res.redirect("/PoloUAB/adm/cadastro")
         }
         req.flash('erro', 'Cadastro falhou')
-        res.redirect("/PoloUAB/adm/registro")
+        res.redirect("/PoloUAB/adm/cadastro")
     })
 })
 
@@ -436,23 +434,23 @@ routes.get("/historico/:id", online, (req, res) => {
         const mes = estruturaMes(mesAtual)
         HorarioBd.historico(req.params.id, mesAtual, anoAtual).then(dados => {
             FeriadosBd.getAll().then(feriadosAll => {
-                AusenciaBd.getUserId(req.params.id).then( ausenciaAll=>{
-                const ausencia = ausenciaAll.data
-                const horarios = dados.data
-                const feriados = feriadosAll.data
-                const estruturaMesVar = estruturaDiaAdm(horarios, anoAtual, mesAtual, feriados, req.params.id, ausencia)
-                res.render("./admin/historicoFuncionario.hbs", {
-                    id: req.params.id,
-                    anoAtual: anoAtual,
-                    mesAtual: mesAtual,
-                    ano,
-                    mes,
-                    dados: estruturaMesVar,
-                    registro: horarios.length == 0 ? false : true,
-                    user: req.session.user || null,
-                    adm: req.session.adm || null,
-                    historico: true
-                })  
+                AusenciaBd.getUserId(req.params.id).then(ausenciaAll => {
+                    const ausencia = ausenciaAll.data
+                    const horarios = dados.data
+                    const feriados = feriadosAll.data
+                    const estruturaMesVar = estruturaDiaAdm(horarios, anoAtual, mesAtual, feriados, req.params.id, ausencia)
+                    res.render("./admin/historicoFuncionario.hbs", {
+                        id: req.params.id,
+                        anoAtual: anoAtual,
+                        mesAtual: mesAtual,
+                        ano,
+                        mes,
+                        dados: estruturaMesVar,
+                        registro: horarios.length == 0 ? false : true,
+                        user: req.session.user || null,
+                        adm: req.session.adm || null,
+                        historico: true
+                    })
                 })
             })
         })
@@ -466,6 +464,7 @@ routes.get('/senha/:id', online, (req, res) => {
         usuarios: true
     })
 })
+
 routes.post('/senha/:id', online, (req, res) => {
 
     FuncionarioBd.upFuncionario(req.params.id, req.body.senha).then(dados => {
